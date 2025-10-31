@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lobby Live</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --panel: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --ok: #16a34a;
+            --warn: #ca8a04;
+            --err: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin-inline: auto;
+            padding: 20px
+        }
+
+        h1 {
+            font-size: 18px;
+            margin: 0 0 10px
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .list {
+            height: 70vh;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 120px 140px 1fr;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .ts {
+            color: var(--muted);
+            font-variant-numeric: tabular-nums
+        }
+
+        .evt {
+            font-weight: 600
+        }
+
+            .evt.ok {
+                color: var(--ok)
+            }
+
+            .evt.warn {
+                color: var(--warn)
+            }
+
+            .evt.err {
+                color: var(--err)
+            }
+
+        .payload {
+            direction: ltr;
+            unicode-bidi: plaintext;
+            word-break: break-word
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <h1>Realtime Logs</h1>
+        <div class="panel">
+            <div id="list" class="list"></div>
+        </div>
+    </div>
+
+    <!-- SignalR (local) -->
+    <script src="/lib/signalr/signalr.min.js"></script>
+    <script>
+        const list = document.getElementById("list");
+        const HUB_URL = `${location.origin}/hubs/lobby`;
+
+        function ts() { return new Date().toLocaleTimeString(); }
+        function addRow(eventName, payload, level = "ok") {
+            const row = document.createElement("div"); row.className = "row";
+            const t = document.createElement("div"); t.className = "ts"; t.textContent = ts();
+            const e = document.createElement("div"); e.className = `evt ${level}`; e.textContent = eventName;
+            const p = document.createElement("div"); p.className = "payload"; p.textContent = payload;
+            row.appendChild(t); row.appendChild(e); row.appendChild(p);
+            list.appendChild(row); list.scrollTop = list.scrollHeight;
+        }
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl(HUB_URL, { withCredentials: true })
+            .withAutomaticReconnect()
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // پیام‌های سرور
+        connection.on("PlayerJoined", m => addRow("PlayerJoined", JSON.stringify(m), "ok"));
+        connection.on("LobbyFull", m => addRow("LobbyFull", JSON.stringify(m), "warn"));
+
+        // وضعیت اتصال
+        connection.onreconnecting(err => addRow("reconnecting", err?.message || "-", "warn"));
+        connection.onreconnected(id => addRow("reconnected", id || "-", "ok"));
+        connection.onclose(err => addRow("closed", err?.message || "no error", "err"));
+
+        // شروع
+        connection.start()
+            .then(() => addRow("connected", "global broadcast mode", "ok"))
+            .catch(e => addRow("start error", e?.message || String(e), "err"));
+    </script>
+</body>
+</html>
