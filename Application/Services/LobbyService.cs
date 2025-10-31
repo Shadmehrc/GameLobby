@@ -9,15 +9,11 @@ namespace Application.Services
 {
     public class LobbyService(ILobbyRepository _lobbyRepository, ILobbyNotifier _notifier) : ILobbyService
     {
-        public Task<bool> Create(CreateLobbyModel model)
-        {
-            throw new NotImplementedException();
-        }
         public Task<Result<long>> CreateLobby()
         {
             return _lobbyRepository.CreateLobbyAsync();
         }
-        public async Task<Result<LobbyModel>> JoinLobby(long lobbyId, string playerId)
+        public async Task<Result<Lobby>> JoinLobby(long lobbyId, string playerId)
         {
             var res = await _lobbyRepository.JoinLobbyAsync(lobbyId, playerId);
 
@@ -26,12 +22,12 @@ namespace Application.Services
             else if (res.Code == ErrorCode.Full)
                 await _notifier.LobbyFull(lobbyId);
             else if (res.Code == ErrorCode.Locked)
-              await _notifier.LobbyFull(lobbyId);
+                await _notifier.LobbyError(lobbyId);
 
             return res;
         }
 
-        public Task<LobbyModel?> GetLobby(long lobbyId)
+        public Task<Lobby?> GetLobby(long lobbyId)
         {
             return _lobbyRepository.GetLobbyAsync(lobbyId);
         }

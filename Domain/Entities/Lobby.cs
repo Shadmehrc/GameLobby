@@ -13,7 +13,7 @@ namespace Domain.Entities
         Closed = 2
     }
 
-    public class LobbyModel
+    public class Lobby
     {
         public long Id { get; set; }
         public int Capacity { get; set; } = 64;

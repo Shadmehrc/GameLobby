@@ -11,7 +11,7 @@ namespace Application.Interfaces.RepositoryInterfaces
     public interface ILobbyRepository
     {
         Task<Result<long>> CreateLobbyAsync();
-        Task<Result<LobbyModel>> JoinLobbyAsync(long lobbyId, string playerId);
-        Task<LobbyModel?> GetLobbyAsync(long lobbyId);
+        Task<Result<Lobby>> JoinLobbyAsync(long lobbyId, string playerId);
+        Task<Lobby?> GetLobbyAsync(long lobbyId);
     }
 }

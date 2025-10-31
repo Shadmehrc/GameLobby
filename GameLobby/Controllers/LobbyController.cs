@@ -17,7 +17,6 @@ namespace GameLobby.Controllers
                 : StatusCode(500, new { error = res.Message, code = res.Code });
         }
 
-
         [HttpPost("{lobbyID}/join")]
         public async Task<IActionResult> Join(long lobbyID, string playerID)
         {
@@ -27,7 +26,7 @@ namespace GameLobby.Controllers
                 : Conflict(new { error = res.Message, code = res.Code });
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(long id)
         {
             var lobby = await _svc.GetLobby(id);

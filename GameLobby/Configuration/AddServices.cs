@@ -14,7 +14,7 @@ namespace GameLobby.Configuration
         {
             services.AddScoped<ILobbyService, LobbyService>();
             services.AddScoped<ILobbyRepository, LobbyRepository>();
-            services.AddScoped<ILobbyNotifier, SignalRLobbyNotifier>();
+            services.AddScoped<ILobbyNotifier, LobbyNotifier>();
             return services;
         }
         public static IServiceCollection AddProjectServices(this IServiceCollection services, IConfiguration config)
