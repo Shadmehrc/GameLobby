@@ -7,16 +7,12 @@ using StackExchange.Redis;
 
 namespace Infrastructure.Repositories;
 
-public class LobbyRepository : ILobbyRepository
+public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> opt, IOptions<LobbyConfigs> lobbyConfigs) : ILobbyRepository
 {
-    private readonly IDatabase _dbContext;
-    private readonly string _namespace;
+    private readonly IDatabase _dbContext = mux.GetDatabase();
+    private readonly string _namespace = (opt.Value.InstancePrefix) + ":";
+    private readonly IOptions<LobbyConfigs> _lobbyConfigs = lobbyConfigs;
 
-    public LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> opt)
-    {
-        _dbContext = mux.GetDatabase();
-        _namespace = (opt.Value.InstancePrefix)+ ":";
-    }
 
     private string Meta(long lobbyID) => $"{_namespace}lobby:{lobbyID}:meta";
     private string Members(long lobbyID) => $"{_namespace}lobby:{lobbyID}:members";
@@ -31,7 +27,7 @@ public class LobbyRepository : ILobbyRepository
         {
             new("status","open"),
             new("clusterLocked","0"),
-            new("capacity","64")
+            new("capacity",_lobbyConfigs.Value.Capacity)
         });
         await _dbContext.SetAddAsync(OpenIndex, Meta(id));
         return Result<long>.Ok(id, "Lobby created");
@@ -67,7 +63,7 @@ public class LobbyRepository : ILobbyRepository
             if (!string.Equals(m.GetValueOrDefault("status"), "open", StringComparison.OrdinalIgnoreCase))
                 return Result<Lobby>.Fail("Lobby is not open", ErrorCode.NotOpen);
 
-            int lobbyCapacity = Convert.ToInt32(m.GetValueOrDefault("capacity", "64"));
+            int lobbyCapacity = Convert.ToInt32(m.GetValueOrDefault("capacity"));
 
             // idempotent
             if (await _dbContext.SetContainsAsync(members, playerId))
@@ -81,7 +77,7 @@ public class LobbyRepository : ILobbyRepository
 
             if (filledCapacity >= lobbyCapacity)
             {
-                await _dbContext.HashSetAsync(meta, new HashEntry[] { new("status", "full"), new("clusterLocked", "1") });
+                await _dbContext.HashSetAsync(meta, new HashEntry[] { new("status", "full"), new("clusterLocked", "1") });//can change here
                 return Result<Lobby>.Fail("Lobby is full", ErrorCode.Full);
             }
 

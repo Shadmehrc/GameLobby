@@ -1,4 +1,5 @@
-﻿using GameLobby.Configuration;
+﻿using Domain.Configuration;
+using GameLobby.Configuration;
 using GameLobby.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +25,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR()
     .AddStackExchangeRedis(builder.Configuration["Redis:ConnectionString"]);
 
+builder.Services.Configure<LobbyConfigs>(builder.Configuration.GetSection("LobbyConfigs"));
 
 var app = builder.Build();
 

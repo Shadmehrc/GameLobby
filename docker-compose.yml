@@ -1,21 +1,54 @@
-version: "3.9"
-
-services:
+﻿services:
   redis:
     image: redis:7
-    container_name: redis
+    container_name: gamelobby-redis
     ports:
-      - "6379:6379"
+      - "6379:6379"           # برای دسترسی از ویندوز/لوکال
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
 
-  gamelobby:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: gamelobby
+  app1:
+    build: .
+    container_name: gamelobby-app1
+    environment:
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstancePrefix=game
+      - ASPNETCORE_URLS=http://+:8080
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
     ports:
       - "5144:8080"
+    restart: unless-stopped
+
+  app2:
+    build: .
+    container_name: gamelobby-app2
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - Redis__ConnectionString=redis:6379,abortConnect=false,connectRetry=3,connectTimeout=5000
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstancePrefix=game
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "5145:8080"
+    restart: unless-stopped
+
+  app3:
+    build: .
+    container_name: gamelobby-app3
+    environment:
+      - Redis__ConnectionString=redis:6379
+      - Redis__InstancePrefix=game
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "5155:8080"
+    restart: unless-stopped
