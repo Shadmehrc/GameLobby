@@ -1,7 +1,7 @@
 $ports      = @(5144,5146,5145)
 $baseUrl    = "http://localhost"
 $path       = "/Lobby"
-$lobbyId    = 7
+$lobbyId    = 1
 $N          = 100
 $Concurrency= 20  
 
