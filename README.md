@@ -14,6 +14,20 @@ Redis stores all lobby data (metadata, members, and indexes) and ensures that on
 
 ---
 
+## 🧱 Architectures & Technologies Used
+
+| Category | Technologies / Patterns |
+|-----------|-------------------------|
+| 🧩 **Architecture** | **Clean Architecture** |
+| 🧠 **Dependency Injection (DI)** | Built-in .NET DI container |
+| 🌐 **REST API** | ASP.NET Core Controllers |
+| 🔗 **SignalR (Real-Time)** | ASP.NET Core SignalR |
+| ⚡ **Redis** | Redis 7 (In-memory data store) |
+| 🧵 **Distributed Locking** | Lua scripts + `SET NX PX` |
+| 🧰 **Docker & Compose** | Multi-container setup |
+| 🧪 **Load Testing** | PowerShell (`RequestSender.ps1`) |
+
+---
 ## 🧩 Core Features
 
 | Feature | Description |
@@ -102,3 +116,14 @@ You can observe live updates on the notifier page:
 👉 [http://localhost:5145/lobby.html](http://localhost:5145/lobby.html)
 
 ---
+---
+
+## 🧩 Overall App Result
+
+The image below shows the **final result of the GameLobby system** after running the load test.  
+As seen in the logs, players joined from **three different instances** (`5144`, `5145`, `5146`).  
+When the lobby reached its **capacity limit of 64 players**,  
+its **status automatically changed to `Full`**, and the system **rejected all further join attempts** —  
+keeping all instances perfectly synchronized through Redis.
+
+![App Result](./GameLobby/GameLobby/GameLobby/Screenshots/appresult.png)
