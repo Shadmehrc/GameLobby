@@ -26,7 +26,6 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
         await _dbContext.HashSetAsync(Meta(id), new HashEntry[]
         {
             new("status","open"),
-            new("clusterLocked","0"),
             new("capacity",_lobbyConfigs.Value.Capacity)
         });
         await _dbContext.SetAddAsync(OpenIndex, Meta(id));
@@ -52,20 +51,13 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
 
         try
         {
-            var m = (await _dbContext.HashGetAllAsync(meta)).ToDictionary(x => x.Name.ToString(), x => x.Value.ToString());
+            var lobbyData = (await _dbContext.HashGetAllAsync(meta)).ToDictionary(x => x.Name.ToString(), x => x.Value.ToString());
 
-            if (m.Count == 0)
+            if (lobbyData.Count == 0)
                 return Result<Lobby>.Fail("Lobby not found", ErrorCode.NotFound);
 
-            if (m.GetValueOrDefault("clusterLocked") == "1")
-                return Result<Lobby>.Fail("Cluster is locked", ErrorCode.Locked);
+            int lobbyCapacity = Convert.ToInt32(lobbyData.GetValueOrDefault("capacity"));
 
-            if (!string.Equals(m.GetValueOrDefault("status"), "open", StringComparison.OrdinalIgnoreCase))
-                return Result<Lobby>.Fail("Lobby is not open", ErrorCode.NotOpen);
-
-            int lobbyCapacity = Convert.ToInt32(m.GetValueOrDefault("capacity"));
-
-            // idempotent
             if (await _dbContext.SetContainsAsync(members, playerId))
             {
                 var lobby0 = await GetLobbyAsync(lobbyId) ?? new Lobby { Id = lobbyId };
@@ -77,7 +69,7 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
 
             if (filledCapacity >= lobbyCapacity)
             {
-                await _dbContext.HashSetAsync(meta, new HashEntry[] { new("status", "full"), new("clusterLocked", "1") });//can change here
+                await _dbContext.HashSetAsync(meta, new HashEntry[] { new("status", "full")});
                 return Result<Lobby>.Fail("Lobby is full", ErrorCode.Full);
             }
 
@@ -87,7 +79,7 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
 
             if (filledCapacity >= lobbyCapacity)
             {
-                await _dbContext.HashSetAsync(meta, [new("status", "full"), new("clusterLocked", "1")]);
+                await _dbContext.HashSetAsync(meta, [new("status", "full")]);
             }
 
             var lobby = await GetLobbyAsync(lobbyId) ?? new Lobby { Id = lobbyId };
@@ -112,7 +104,6 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
         {
             Id = lobbyID,
             Capacity = int.Parse(lobbyData.GetValueOrDefault("capacity", "64")),
-            ClusterLocked = lobbyData.GetValueOrDefault("clusterLocked") == "1",
             Status = lobbyData.GetValueOrDefault("status") 
             switch
             {

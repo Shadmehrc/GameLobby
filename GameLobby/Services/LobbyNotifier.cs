@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Interfaces.ServiceInterfaces;
 using GameLobby.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

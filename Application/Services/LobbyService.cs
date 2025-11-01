@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.RepositoryInterfaces;
+﻿using Application.Interfaces.RepositoryInterfaces;
 using Application.Interfaces.ServiceInterfaces;
 using Application.Model;
 using Domain.Entities;

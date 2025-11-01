@@ -1,10 +1,9 @@
-# ”«“ê«— »« PowerShell 5 - »œÊ‰ [ref]
 $ports      = @(5144,5146,5145)
 $baseUrl    = "http://localhost"
 $path       = "/Lobby"
-$lobbyId    = 4
-$N          = 63
-$Concurrency= 20  #  ⁄œ«œ œ—ŒÊ«”  Â„“„«‰
+$lobbyId    = 7
+$N          = 100
+$Concurrency= 20  
 
 $numbers = 1..$N
 $chunks = [System.Collections.ArrayList]::new()

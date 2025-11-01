@@ -25,8 +25,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddSignalR()
     .AddStackExchangeRedis(builder.Configuration["Redis:ConnectionString"]);
 
-builder.Services.Configure<LobbyConfigs>(builder.Configuration.GetSection("LobbyConfigs"));
-
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -44,11 +42,9 @@ app.UseCors("CorsPolicy");
 app.UseAuthorization();
 
 app.MapHub<LobbyHub>("/hubs/lobby");
-app.MapGet("/health", () => Results.Ok(new { status = "ok" })); // just check ., maybe delete later
-
-
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 app.MapControllers();
 
-// app.UseHttpsRedirection(); // http im alan
+// app.UseHttpsRedirection();a
 app.Run();

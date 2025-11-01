@@ -1,5 +1,4 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.RepositoryInterfaces;
+﻿using Application.Interfaces.RepositoryInterfaces;
 using Application.Interfaces.ServiceInterfaces;
 using Application.Services;
 using Domain.Configuration;
@@ -19,8 +18,10 @@ namespace GameLobby.Configuration
         }
         public static IServiceCollection AddProjectServices(this IServiceCollection services, IConfiguration config)
         {
-            // اتصال Redis یکبار (Singleton)
+
             services.Configure<RedisOptions>(config.GetSection("Redis"));
+
+            services.Configure<LobbyConfigs>(config.GetSection("LobbyConfigs"));
 
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
