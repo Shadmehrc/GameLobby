@@ -77,7 +77,7 @@ It demonstrates **distributed, synchronized communication** between multiple app
 
 Below is an example of the real-time updates in action:
 
-![Notifier Result](./GameLobby/GameLobby/GameLobby/Screenshots/notifierresult.png)
+![Notifier Result](./GameLobby/Screenshots/NotifierResult.png)
 
 
 ---
