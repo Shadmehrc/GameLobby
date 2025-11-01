@@ -126,4 +126,4 @@ When the lobby reached its **capacity limit of 64 players**,
 its **status automatically changed to `Full`**, and the system **rejected all further join attempts** —  
 keeping all instances perfectly synchronized through Redis.
 
-![App Result](./GameLobby/GameLobby/GameLobby/Screenshots/appresult.png)
+![App Result](./GameLobby/Screenshots/AppResult.png)
