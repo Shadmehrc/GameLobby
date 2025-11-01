@@ -1,25 +1,25 @@
-﻿# ---------- build ----------
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY GameLobby.sln ./
-COPY Application/Application.csproj Application/
+
 COPY Domain/Domain.csproj Domain/
+COPY Application/Application.csproj Application/
 COPY Infrastructure/Infrastructure.csproj Infrastructure/
 COPY GameLobby/GameLobby.csproj GameLobby/
+COPY GameLobby.sln .
+
 RUN dotnet restore GameLobby.sln
 
 
 COPY . .
 
 
-WORKDIR /src/GameLobby
-RUN dotnet publish -c Release -o /app /p:UseAppHost=false
+RUN dotnet publish GameLobby/GameLobby.csproj -c Release -o /app/publish
 
-# ---------- runtime ----------
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=build /app .
-ENV ASPNETCORE_URLS=http://+:8080
+COPY --from=build /app/publish .
 EXPOSE 8080
-ENTRYPOINT ["dotnet","GameLobby.dll"]
+ENV ASPNETCORE_URLS=http://+:8080
+ENTRYPOINT ["dotnet", "GameLobby.dll"]
