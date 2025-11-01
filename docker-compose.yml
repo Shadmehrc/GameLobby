@@ -50,5 +50,5 @@
       redis:
         condition: service_healthy
     ports:
-      - "5155:8080"
+      - "5146:8080"
     restart: unless-stopped
