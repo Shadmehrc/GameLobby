@@ -62,9 +62,9 @@ each one mapped to a different port on your local machine.
 
 | Instance | Container Name | Port | URL |
 |-----------|----------------|------|------|
-| 🟢 App #1 | `gamelobby-app1` | **5144** | [http://localhost:5144](http://localhost:5144) |
-| 🟢 App #2 | `gamelobby-app2` | **5145** | [http://localhost:5145](http://localhost:5145) |
-| 🟢 App #3 | `gamelobby-app3` | **5146** | [http://localhost:5146](http://localhost:5146) |
+| 🟢 App #1 | `gamelobby-app1` | **5144** | [http://localhost:5144](http://localhost:5144/swagger/index.html) |
+| 🟢 App #2 | `gamelobby-app2` | **5145** | [http://localhost:5145](http://localhost:5145/swagger/index.html) |
+| 🟢 App #3 | `gamelobby-app3` | **5146** | [http://localhost:5146](http://localhost:5146/swagger/index.html) |
 
 All instances share the same **Redis** container, ensuring that lobby data and locks remain synchronized across all pods.
 
