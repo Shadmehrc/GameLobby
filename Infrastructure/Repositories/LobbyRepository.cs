@@ -58,10 +58,11 @@ public class LobbyRepository(IConnectionMultiplexer mux, IOptions<RedisOptions> 
 
             int lobbyCapacity = Convert.ToInt32(lobbyData.GetValueOrDefault("capacity"));
 
+
             if (await _dbContext.SetContainsAsync(members, playerId))
             {
                 var lobby0 = await GetLobbyAsync(lobbyId) ?? new Lobby { Id = lobbyId };
-                return Result<Lobby>.Ok(lobby0, $"You have joined the lobby with ID {lobbyId}");
+                return Result<Lobby>.Fail( $"You Already joined the lobby with ID {lobbyId}");
             }
 
             var filledCapacity = (int)
