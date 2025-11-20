@@ -1,6 +1,6 @@
-﻿using Domain.Configuration;
-using GameLobby.Configuration;
+﻿using GameLobby.Configuration;
 using GameLobby.Hubs;
+using Players.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +24,14 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSignalR()
     .AddStackExchangeRedis(builder.Configuration["Redis:ConnectionString"]);
+
+
+builder.Services.AddGrpcClient<PlayerGrpc.PlayerGrpcClient>(options =>
+{
+    options.Address = new Uri("https://localhost:7027");
+});
+
+
 
 var app = builder.Build();
 

@@ -1,22 +1,18 @@
-using Players.Configuration;
-using Players.GrpcServices; // »«·« «÷«›Â ò‰
-
+Ôªøusing Players.Configuration;
+using Players.GrpcServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddGrpc();
 
+builder.Services.AddGrpc();
 builder.Services.AddControllers();
 builder.Services.AddDependencyInjections();
 
 var app = builder.Build();
 
-
-app.MapControllers();
-
-// Configure the HTTP request pipeline.
+app.MapControllers();     
 app.MapGrpcService<PlayerGrpcService>();
-app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client...");
+
+app.MapGet("/", () => "Players gRPC service is running.");
 
 app.Run();
