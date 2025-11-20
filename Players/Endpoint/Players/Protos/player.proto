@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Players.Grpc";
+
+message GetPlayerRequest {
+  string id = 1; 
+}
+
+
+message GetPlayerReply {
+  string id = 1;
+  string userName = 2;
+  string status = 3;    
+  string createdAt = 4;
+}
+
+service PlayerGrpc {
+  rpc GetPlayer (GetPlayerRequest) returns (GetPlayerReply);
+}

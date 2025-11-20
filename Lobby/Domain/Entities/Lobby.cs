@@ -18,7 +18,7 @@ namespace Domain.Entities
         public long Id { get; set; }
         public int Capacity { get; set; } = 64;
         public LobbyStatus Status { get; set; } = LobbyStatus.Open;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int MemberCount { get; set; } = 0;
     }
 }
