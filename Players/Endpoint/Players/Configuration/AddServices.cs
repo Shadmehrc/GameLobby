@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.RepositoryInterfaces;
 using Application.Interfaces.ServiceInterfaces;
 using Application.Services;
+using Infrastructure.Messaging;
 using Infrastructure.Repositories;
 
 namespace Players.Configuration
@@ -11,6 +12,8 @@ namespace Players.Configuration
         {
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddSingleton<IPlayerRepository, PlayerRepository>();
+            services.AddHostedService<PlayerEventsConsumer>();
+
             return services;
         }
     }

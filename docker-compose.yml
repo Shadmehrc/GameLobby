@@ -11,6 +11,18 @@
       retries: 10
     restart: unless-stopped
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: game-rabbit
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: gues
+
+
+
   app1:
     build: .
     container_name: gamelobby-app1

@@ -43,5 +43,16 @@ namespace Application.Services
             return await _playerRepository.GetByIdAsync(id);
    
         }
+
+        public async  Task SetStatusInLobbyAsync(string playerId, long lobbyId)
+        {
+            var player = await _playerRepository.GetByIdAsync(playerId);
+            if (player is null)
+            {
+                Console.WriteLine("magiccc");
+                return;
+            }
+            player.Status = PlayerStatus.InLobby;
+        }
     }
 }

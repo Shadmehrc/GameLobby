@@ -11,6 +11,7 @@ namespace Application.Interfaces.ServiceInterfaces
     {
         Task<Player?> GetByIdAsync(string id);
         Task<Player> CreateAsync(string playerId, string userName);
+        Task SetStatusInLobbyAsync(string playerId, long lobbyId);
     }
 }
 
