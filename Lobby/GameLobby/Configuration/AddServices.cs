@@ -15,7 +15,11 @@ namespace GameLobby.Configuration
             services.AddScoped<ILobbyService, LobbyService>();
             services.AddScoped<ILobbyRepository, LobbyRepository>();
             services.AddScoped<ILobbyNotifier, LobbyNotifier>();
-            services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
+
+            services.AddScoped<IEventPublisher, MassTransitEventPublisher>();
+
+
+
             return services;
         }
         public static IServiceCollection AddProjectServices(this IServiceCollection services, IConfiguration config)

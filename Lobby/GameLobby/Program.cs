@@ -21,20 +21,7 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod()
         .AllowCredentials());
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+builder.Services.AddMessaging(builder.Configuration);
 
 
 

@@ -8,7 +8,7 @@ namespace Application.Interfaces.RepositoryInterfaces
 {
     public interface IEventPublisher
     {
-        void PublishPlayerJoined(string playerId, long lobbyId, DateTime joinedAt);
+        Task PublishPlayerJoined(string playerId, long lobbyId, DateTime joinedAt);
 
     }
 }
