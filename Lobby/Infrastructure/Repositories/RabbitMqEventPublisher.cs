@@ -5,6 +5,12 @@ using RabbitMQ.Client;
 
 namespace Infrastructure.Messaging
 {
+    public record PlayerJoined
+    {
+        public string PlayerId { get; init; } = default!;
+        public long LobbyId { get; init; }
+        public DateTime JoinedAt { get; init; }
+    }
     public class RabbitMqEventPublisher : IEventPublisher, IDisposable
     {
         private readonly IConnection _connection;
@@ -17,8 +23,8 @@ namespace Infrastructure.Messaging
             {
                 HostName = "localhost",
                 Port = 5672,
-                UserName = "admin",
-                Password = "admin"
+                UserName = "guest",
+                Password = "guest"
             };
 
             _connection = factory.CreateConnection();

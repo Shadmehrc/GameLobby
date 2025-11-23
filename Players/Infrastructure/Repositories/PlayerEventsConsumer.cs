@@ -27,8 +27,8 @@ namespace Infrastructure.Messaging
             {
                 HostName = "localhost",
                 Port = 5672,
-                UserName = "admin",
-                Password = "admin"
+                UserName = "guest",
+                Password = "guest"
             };
 
             _connection = factory.CreateConnection();
